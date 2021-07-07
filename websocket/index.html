@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<textarea name="content" cols="30" rows="10" autofocus></textarea>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+<script>
+    let ta = document.querySelector("textarea");
+    let ws = new WebSocket("ws://127.0.0.1:9504");
+    ws.onmessage = function (event) {
+        console.log(event.data);
+    };
+    let sendMessage = _.debounce(function (msg) {
+        ws.send(msg);
+    }, 500);
+
+    ta.onkeyup = function (e) {
+        if (e.key === "Enter" && ta.value.trim() !== "") {
+            sendMessage(ta.value.trim());
+            ta.value = "";
+        }
+    }
+</script>
+</body>
+</html>
